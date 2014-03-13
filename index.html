@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Decker : Interactive slide decks" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Decker</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/kforeman/decker">View on GitHub</a>
+
+          <h1 id="project_title">Decker</h1>
+          <h2 id="project_tagline">Interactive slide decks</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/kforeman/decker/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/kforeman/decker/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="decker" class="anchor" href="#decker"><span class="octicon octicon-link"></span></a>Decker</h1>
+
+<p>Make HTML5 presentations that users can follow along and interact with from their mobile devices. Two-way interactions allow your presentation to both send content to the audience and receive responses from them.</p>
+
+<h2>
+<a name="what" class="anchor" href="#what"><span class="octicon octicon-link"></span></a>What?</h2>
+
+<p>Here, just watch this 2 minute video.</p>
+
+<h2>
+<a name="disclaimer" class="anchor" href="#disclaimer"><span class="octicon octicon-link"></span></a>Disclaimer</h2>
+
+<p>Right now it's too soon to call this a library or anything, it's just a single afternoon hack I made to learn WebSockets. I'm putting it out there to gauge interest - if you'd like to help work on it, get in touch!</p>
+
+<h2>
+<a name="what-can-i-do-with-it" class="anchor" href="#what-can-i-do-with-it"><span class="octicon octicon-link"></span></a>What can I do with it?</h2>
+
+<p>Well, right now it's in the afternoon hackathon/proof-of-concept stage, but here's where I'm looking to go:</p>
+
+<ul>
+<li>Let the audience follow the presentation on their mobile device</li>
+<li>Show polls to users and update data visualizations in the presentation in real-time based on responses</li>
+<li>Send extra content to mobile devices (e.g. the deck translated into another language, information tailored to each user, etc)</li>
+<li>Allow users to login with e.g. Twitter to add content directly into presentation</li>
+</ul><h2>
+<a name="how-does-it-work" class="anchor" href="#how-does-it-work"><span class="octicon octicon-link"></span></a>How does it work?</h2>
+
+<p>Through <a href="http://www.html5rocks.com/en/tutorials/websockets/basics/">WebSockets</a>! These cool little pieces of javascript magic allows for instantaneous and continuous communication between the presentation and the audience.</p>
+
+<h3>
+<a name="implementation" class="anchor" href="#implementation"><span class="octicon octicon-link"></span></a>Implementation</h3>
+
+<p>Specifically, this proof-of-concept uses several libraries, each of which could be swapped out given a little more time:</p>
+
+<ul>
+<li>
+<a href="http://rubyonrails.org/">Ruby on Rails</a> - Rails is great for quickly knocking out a prototype, but it's overkill for this project seeing as it doesn't need an entire MVC framework. Moving to node.js probably makes the most sense.</li>
+<li>
+<a href="https://github.com/websocket-rails/websocket-rails">WebSocket-Rails</a> - a quick and easy way to get a WebSocket server up and running, but probably overkill.</li>
+<li>
+<a href="https://github.com/mbostock/stack">stack.js</a> - a little library by Mike Bostock for quickly building a slide deck. We've modified it a bit to allow for custom events, but we'll probably move to <a href="https://github.com/hakimel/reveal.js">Reveal.js</a> instead to allow for more control.</li>
+<li>The slides in the demo use <a href="https://github.com/mbostock/d3">d3js</a>, <a href="https://github.com/mbostock/topojson">TopoJSON</a> (both also by Mike Bostock - man, that guy does everything!), and <a href="https://developers.google.com/maps/documentation/javascript/">Google Maps Javascript API</a> but that's just for slide content.</li>
+</ul><h2>
+<a name="is-there-a-demo" class="anchor" href="#is-there-a-demo"><span class="octicon octicon-link"></span></a>Is there a demo?</h2>
+
+<p>Just clone this repo and run <code>rails s</code>!</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Decker maintained by <a href="https://github.com/kforeman">kforeman</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
