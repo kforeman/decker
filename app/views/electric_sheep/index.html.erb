@@ -1,0 +1,40 @@
+<%= render partial: 'electric_sheep_websocket' %>
+
+<%= render partial: 'replicants' %>
+
+
+<section id='0'>
+<h2>You're In! (all of you)</h2>
+</section>
+
+<section id='1'>
+    <div class='button' onclick='allReplicantLocations();'>Simulate Places</div>
+</section>
+
+
+<section id='2'>
+    <div class='button' onclick='allReplicantVotes();'>Simulate Votes</div>
+</section>
+
+<section id='3'>
+<h2>Done</h2>
+</section>
+
+<style type="text/css">
+body {
+    font-family: "Helvetica Neue", sans-serif;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, .3);
+    background: #222 url(cartographer.png);
+    color: #fff;
+}
+.button {
+    padding: 20px;
+    width: 250px;
+    font-size: 2em;
+    color: #fff;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #d6604d;
+  }
+</style>

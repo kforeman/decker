@@ -1,0 +1,30 @@
+<!-- connect websocket client -->
+<script type="text/javascript">
+
+    // initialize dispatcher
+    var dispatcher = new WebSocketRails('<%= request.host %>:<%= request.port %>/websocket');
+
+    // this isn't really necessary, just a good way of testing that everything is working
+    var currentSlide;
+    dispatcher.bind('handshake', function(data) {
+        console.log('Connected with audience_id: ' + data.audience_id);
+        dispatcher.audience_id = data.audience_id;
+        currentSlide = data.slide;
+    });
+
+    // change to a specific slide
+    function showSlide(slide) {
+        currentSlide = slide;
+        d3.selectAll('section')
+            .style('display', function(d) { return currentSlide == parseInt(this.id) ? 'inline': 'none' })
+            .style('visibility', function(d) { return currentSlide == parseInt(this.id) ? 'visible': 'hidden' });
+    }
+
+    // connect to audience events for slide changes
+    var audience = dispatcher.subscribe('audience');
+    audience.bind('show', function(data) {
+        console.log('Presenter changed to ' + data.slide);
+        showSlide(data.slide);
+    });
+
+</script>

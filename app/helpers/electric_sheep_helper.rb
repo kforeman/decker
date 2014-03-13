@@ -1,0 +1,2 @@
+module ElectricSheepHelper
+end

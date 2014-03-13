@@ -1,0 +1,17 @@
+<!-- connect websocket client -->
+<script type="text/javascript">
+
+    // initialize dispatcher
+    var dispatcher = new WebSocketRails('<%= request.host %>:<%= request.port %>/websocket');
+
+    // subscribe to the presenter channel
+    var presenter = dispatcher.subscribe('presenter');
+
+    // keep track of audience
+    var audience = [];
+    presenter.bind('new_audience', function(data) {
+        console.log('New audience member connected: ' + data);
+        if (audience.indexOf(data) == -1) audience.push(data);
+    });
+
+</script>

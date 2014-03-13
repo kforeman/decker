@@ -1,0 +1,66 @@
+<script type="text/javascript">
+    /*
+        Note: a much better way to implement this would be through WebWorkers
+        That way you wouldn't have to come up with fake IDs or anything like that and you'd better simulate the actual internals.
+        However, WebSocketRails requires access to 'window', which is not visible to a WebWorker.
+        Using WebSocket directly is the appropriate workaround, but no time for that now!
+    */
+
+// geocode lat/lng
+var cityState = [],
+    geocoder = new google.maps.Geocoder();
+
+// some simulation data from http://www2.census.gov/geo/ua/ua_list_ua.xls and http://www.popvssoda.com/stats/ALL.html
+var replicants = [];
+d3.csv('replicants.csv', function(data) {
+    // create a record for each replicant
+    var a = 0;
+    for (var i = data.length - 1; i >= 0; i--) {
+        var d = data[i];
+        for (var s = 0; s < parseInt(d.num); s++) {
+            a++;
+            replicants.push({
+                'audience_id': a,
+                'city_state': [d.city, d.state],
+                'lat_lng': { k: d.lat, A: d.lng },
+                'soda_pop': (Math.random() <= d.soda_prop ? 'soda' : 'pop'),
+                'delay': Math.random() * 10e3,
+            });
+        }
+    };
+});
+
+// have each replicant submit its location
+function replicantLocation(d) {
+    window.setTimeout(function() {
+        dispatcher.trigger('audience.my_location', {
+            'audience_id':  d.audience_id,
+            'city_state':   d.city_state,
+            'lat_lng':      d.lat_lng,
+            'silent':       true,
+        });
+    }, d.delay);
+}
+function allReplicantLocations() {
+    for (var i = replicants.length - 1; i >= 0; i--) {
+        replicantLocation(replicants[i]);
+    }
+}
+
+// have each replicant vote on soda vs pop (using actual likelihoods from their state!)
+function replicantVote(d) {
+    window.setTimeout(function() {
+        dispatcher.trigger('audience.vote', {
+            'audience_id':  d.audience_id,
+            'soda_pop':     d.soda_pop,
+            'silent':       true,
+        });
+    }, d.delay);
+}
+function allReplicantVotes() {
+    for (var i = replicants.length - 1; i >= 0; i--) {
+        replicantVote(replicants[i]);
+    }
+}
+
+</script>

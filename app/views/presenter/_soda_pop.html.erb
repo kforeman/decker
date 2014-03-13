@@ -1,0 +1,154 @@
+<style type="text/css">
+    #soda-map {
+        height: 500px;
+        width:  800px;
+        float:  left;
+    }
+    #soda-pie {
+        height: 500px;
+        width:  200px;
+        float:  left;
+    }
+    .choropleth-boundary {
+        stroke: rgb(36,36,36);
+        fill:   none;
+        stroke-width: 2px;
+        stroke-linejoin: round;
+    }
+    .choropleth-state {
+        stroke: none;
+    }
+    .soda {
+        color: #d6604d;
+        fill: #d6604d;
+        stroke: rgb(36,36,36);
+    }
+    .pop {
+        color: #4393c3;
+        fill: #4393c3;
+        stroke: rgb(36,36,36);
+    }
+</style>
+<section>
+    <h3><span class='soda'>#soda</span> or <span class='pop'>#pop</span>?</h3>
+    <svg id='soda-map'></svg>
+    <svg id='soda-pie'></svg>
+</section>
+
+<!-- draw a map of where the audience is -->
+<script type="text/javascript">
+
+    // store soda/pop for each audience member
+    var sodaPop = {};
+
+    // listen for audience votes
+    presenter.bind('audience_vote', function(data) {
+        if (!data.silent) console.log(data.audience_id + ' votes ' + data.soda_pop);
+        sodaPop[data.audience_id] = data.soda_pop;
+        countSodaPop();
+        sodaPopMap();
+        sodaPopPie();
+    });
+
+    // count soda/pop for each state and total
+    var sodaCounts = {},
+        popCounts = {},
+        sodaTotal = 0,
+        popTotal = 0;
+    function countSodaPop() {
+        sodaCounts = {};
+        popCounts = {};
+        sodaTotal = 0;
+        popTotal = 0;
+        audience.forEach(function(a) {
+            if (locations[a]) {
+                var state = locations[a][1],
+                    sp = sodaPop[a];
+                if (sp == 'soda') {
+                    if (typeof(sodaCounts[state]) == 'undefined') sodaCounts[state] = 1;
+                    else sodaCounts[state]++;
+                    sodaTotal++;
+                }
+                else if (sp == 'pop') {
+                    if (typeof(popCounts[state]) == 'undefined') popCounts[state] = 1;
+                    else popCounts[state]++;
+                    popTotal++;
+                }
+            }
+        });
+    }
+
+    // draw a map of the US
+    var choropleth = {};
+        choropleth.svg = d3.select('#soda-map');
+        choropleth.w = $('#soda-map').width();
+        choropleth.h = $('#soda-map').height();
+        choropleth.proj = d3.geo.albers()
+            .scale(choropleth.w * 1.35)
+            .translate([choropleth.w/2, choropleth.h/2]);
+        choropleth.path = d3.geo.path()
+            .projection(choropleth.proj);
+        choropleth.color_scale = d3.scale.linear()
+            .range(colorbrewer['RdBu'][9])
+            .domain(d3.range(0, 1.01, 1/9));
+    d3.json('us.json', function(json) {
+        choropleth.states = choropleth.svg.append('g').selectAll('.choropleth-state')
+            .data(topojson.feature(json, json.objects.states).features)
+          .enter().append('path')
+            .attr('d', choropleth.path)
+            .classed('choropleth-state', true);
+
+        choropleth.boundary = choropleth.svg.append('path')
+          .datum(topojson.mesh(json, json.objects.states, function(a,b) { return a !== b; }))
+            .classed('choropleth-boundary', true)
+            .attr('d', choropleth.path);
+
+        choropleth.ready = true;
+        sodaPopMap();
+    });
+
+    // convert state names to fips (id)
+    var stateToFips = {'Alabama':1,'Alaska':2,'Arizona':4,'Arkansas':5,'California':6,'Colorado':8,'Connecticut':9,'Delaware':10,'District of Columbia':11,'Florida':12,'Georgia':13,'Hawaii':15,'Idaho':16,'Illinois':17,'Indiana':18,'Iowa':19,'Kansas':20,'Kentucky':21,'Louisiana':22,'Maine':23,'Maryland':24,'Massachusetts':25,'Michigan':26,'Minnesota':27,'Mississippi':28,'Missouri':29,'Montana':30,'Nebraska':31,'Nevada':32,'New Hampshire':33,'New Jersey':34,'New Mexico':35,'New York':36,'North Carolina':37,'North Dakota':38,'Ohio':39,'Oklahoma':40,'Oregon':41,'Pennsylvania':42,'Rhode Island':44,'South Carolina':45,'South Dakota':46,'Tennessee':47,'Texas':48,'Utah':49,'Vermont':50,'Virginia':51,'Washington':53,'West Virginia':54,'Wisconsin':55,'Wyoming':56,};
+
+    // update choropleth colors
+    function sodaPopMap() {
+        var dat = {};
+        for (var s in stateToFips) {
+            var soda = (typeof(sodaCounts[s]) == 'undefined' ? 0 : sodaCounts[s]),
+                pop = (typeof(popCounts[s]) == 'undefined' ? 0 : popCounts[s]);
+            dat[stateToFips[s]] = (soda + pop == 0) ? 0.5 : pop / (soda + pop);
+        }
+        if (choropleth.ready) {
+            choropleth.states
+                //.transition().duration(1000)
+                .style('fill', function(d) { return choropleth.color_scale(dat[d.id]); });
+        }
+    }
+
+    // make a pie chart of responses
+    var pie = d3.layout.pie()
+        .value(function(d) { return d.num; });
+    var arc = d3.svg.arc()
+            .outerRadius(75)
+            .innerRadius(0);
+    var piePath = d3.select('#soda-pie').append('g')
+        .attr('transform', 'translate(75,250)').selectAll(".arc");
+    function sodaPopPie() {
+        if (sodaTotal + popTotal > 0) {
+            var data = [
+                { 'vote': 'soda', 'num': sodaTotal },
+                { 'vote': 'pop', 'num': popTotal },
+            ]
+            piePath = piePath.data(pie(data));
+
+            piePath.enter().append('path')
+                .attr("d", arc)
+                .classed('pop', function(d) { return d.data.vote == 'pop'; })
+                .classed('soda', function(d) { return d.data.vote == 'soda'; });
+
+            piePath.attr('d', arc);
+        }
+    }
+
+
+</script>

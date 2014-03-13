@@ -1,0 +1,116 @@
+<style type="text/css">
+    #audience-map {
+        height: 500px;
+        width:  800px;
+        float:  left;
+    }
+    .map-boundary {
+        stroke: rgb(36,36,36);
+        fill:   none;
+        stroke-width: 2px;
+        stroke-linejoin: round;
+    }
+    .map-state {
+        fill: #e4eef4;
+        stroke: none;
+    }
+    .map-circle {
+        stroke: none;
+        fill:   #3498db;
+        opacity:0.7;
+    }
+    h3 {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+</style>
+<section>
+    <h3>Where y'all from?</h3>
+    <svg id='audience-map'></svg>
+</section>
+
+<!-- draw a map of where the audience is -->
+<script type="text/javascript">
+
+    // keep track of audience locations
+    var locations = {},
+        locationCoords = {};
+
+    // listen for new audience locations
+    presenter.bind('audience_location', function(data) {
+        if (!data.silent) console.log(data.audience_id + ' lives in ' + data.city_state.join(', '));
+        if (audience.indexOf(data.audience_id) == -1) audience.push(data.audience_id);
+        locations[data.audience_id] = data.city_state;
+        locationCoords[data.city_state] = data.lat_lng;
+        countAudience();
+        drawAudience();
+    });
+
+    // count audience members in each location
+    var locationCounts = {};
+    function countAudience() {
+        locationCounts = {};
+        audience.forEach(function(a) {
+            var l = locations[a];
+            if (typeof(l) != 'undefined') {
+                if (typeof(locationCounts[l]) == 'undefined') locationCounts[l] = 1;
+                else locationCounts[l]++;
+            }
+        });
+    }
+
+    // draw a map of the US
+    var map = {};
+        map.svg = d3.select('#audience-map');
+        map.w = $('#audience-map').width();
+        map.h = $('#audience-map').height();
+        map.proj = d3.geo.albers()
+            .scale(map.w * 1.35)
+            .translate([map.w/2, map.h/2]);
+        map.path = d3.geo.path()
+            .projection(map.proj);
+        map.r_scale = d3.scale.sqrt()
+            .range([0, 30])
+            .clamp(true)
+            .domain([0, 50]);
+    d3.json('us.json', function(json) {
+        map.us = json;
+        map.states = map.svg.append('g').selectAll('.map-state')
+            .data(topojson.feature(map.us, map.us.objects.states).features)
+          .enter().append('path')
+            .attr('d', map.path)
+            .classed('map-state', true);
+        map.boundary = map.svg.append('path')
+          .datum(topojson.mesh(map.us, map.us.objects.states, function(a,b) { return a !== b; }))
+            .classed('map-boundary', true)
+            .attr('d', map.path);
+        map.ready = true;
+        map.circles = map.svg.selectAll('.map-circle');
+    });
+
+    // add circles showing the location/size of the audience
+    function drawAudience() {
+        if (map.ready) {
+            var dat = Object.keys(locationCounts).map(function(d) {
+                var co = locationCoords[d];
+                return {
+                    location:   d,
+                    audience:   locationCounts[d],
+                    lat_lng:    [co.A, co.k] };
+                }
+            );
+            map.circles = map.circles.data(dat, function(d) { return d.location; });
+            map.circles.enter().append('circle')
+                .attr('transform', function(d) { return 'translate(' + map.proj(d.lat_lng) + ')'; })
+                .classed('map-circle', true)
+                .attr('r', 0);
+            map.circles
+                //.transition().duration(500)
+                //.attr('title', function(d) { return d.location; })
+                .attr('r', function(d) { return map.r_scale(d.audience); });
+            map.circles.exit().transition()
+                .attr('r', 0)
+                .remove();
+        }
+    }
+</script>

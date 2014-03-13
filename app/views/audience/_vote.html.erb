@@ -1,0 +1,45 @@
+<style>
+  #mapCanvas {
+    width: 500px;
+    height: 300px;
+  }
+  #infoPanel {
+    margin-bottom: 5px;
+  }
+  .button {
+    padding: 20px;
+    width: 100px;
+    font-size: 2em;
+    color: #fff;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .soda {
+    background-color: #d6604d;
+  }
+  .pop {
+    background-color: #4393c3;
+  }
+</style>
+
+<section id='2' style='visibility:hidden;'>
+  <div class='button soda' onclick='sendSodaPop("soda")'>#soda</div>
+  <br/>
+  <div class='button pop' onclick='sendSodaPop("pop")'>#pop</div>
+</section>
+
+
+<!-- functions to enable map with draggable pin, geocoding the city the user places it on -->
+<script type="text/javascript">
+
+    // send the vote to the server
+    function sendSodaPop(sodaPop) {
+        dispatcher.trigger('audience.vote', {
+          'soda_pop':   sodaPop,
+          'audience_id':dispatcher.audience_id,
+        });
+    }
+
+</script>
+
