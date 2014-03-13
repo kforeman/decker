@@ -5,6 +5,8 @@ LiveCensus::Application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
+  root 'presenter#index'
+
   get 'audience', to: 'audience#index'
 
   get 'presenter', to: 'presenter#index'

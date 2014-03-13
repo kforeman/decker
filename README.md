@@ -1,8 +1,8 @@
 # Decker
-Make HTML5 presentations that users can follow along and interact with from their mobile devices. Two-way interactions allow your presentation to both send content to the audience and receive responses from them.
+Decker helps you create interactive HTML5 slide decks, allowing the audience to both follow along and participate in the presentation from their mobile device.
 
 ## What?
-Here, just watch this 2 minute video.
+Here, just watch this 2 minute video: https://vimeo.com/89004064
 
 
 ## Disclaimer
@@ -23,9 +23,9 @@ Through [WebSockets](http://www.html5rocks.com/en/tutorials/websockets/basics/)!
 Specifically, this proof-of-concept uses several libraries, each of which could be swapped out given a little more time:
 
 * [Ruby on Rails](http://rubyonrails.org/) - Rails is great for quickly knocking out a prototype, but it's overkill for this project seeing as it doesn't need an entire MVC framework. Moving to node.js probably makes the most sense.
-* [WebSocket-Rails](https://github.com/websocket-rails/websocket-rails) - a quick and easy way to get a WebSocket server up and running, but probably overkill.
-* [stack.js](https://github.com/mbostock/stack) - a little library by Mike Bostock for quickly building a slide deck. We've modified it a bit to allow for custom events, but we'll probably move to [Reveal.js](https://github.com/hakimel/reveal.js) instead to allow for more control.
-* The slides in the demo use [d3js](https://github.com/mbostock/d3), [TopoJSON](https://github.com/mbostock/topojson) (both also by Mike Bostock - man, that guy does everything!), and [Google Maps Javascript API](https://developers.google.com/maps/documentation/javascript/) but that's just for slide content.
+* [WebSocket-Rails](https://github.com/websocket-rails/websocket-rails) - a quick and easy way to get a WebSocket server up and running, but again - probably overkill. We can just use WebSockets directly.
+* [stack.js](https://github.com/mbostock/stack) - a little library by Mike Bostock for quickly building a slide deck. I've modified it a bit to allow for custom events, but we should probably move to [Reveal.js](https://github.com/hakimel/reveal.js) instead to allow for more control.
+* The slides in the demo use [d3js](https://github.com/mbostock/d3), [TopoJSON](https://github.com/mbostock/topojson) (both also by Mike Bostock - man, that guy does everything!), and [Google Maps Javascript API](https://developers.google.com/maps/documentation/javascript/) but those are all just for slide content.
 
 ## Is there a demo?
 Just clone this repo and run `rails s`! The following urls should then be active:
