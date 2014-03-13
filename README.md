@@ -30,6 +30,6 @@ Specifically, this proof-of-concept uses several libraries, each of which could 
 ## Is there a demo?
 Just clone this repo and run `rails s`! The following urls should then be active:
 
-* [http://localhost:3000/presenter]() - this is the main slide deck
-* [http://localhost:3000/audience]() - this is the audience's view
-* [http://localhost:3000/electric-sheep]() - control "replicants" to test out what the deck will be like with a large audience!
+* [http://localhost:3000/presenter](http://localhost:3000/presenter) - this is the main slide deck
+* [http://localhost:3000/audience](http://localhost:3000/audience) - this is the audience's view
+* [http://localhost:3000/electric-sheep](http://localhost:3000/electric-sheep) - control "replicants" to test out what the deck will be like with a large audience!
