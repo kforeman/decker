@@ -28,4 +28,8 @@ Specifically, this proof-of-concept uses several libraries, each of which could 
 * The slides in the demo use [d3js](https://github.com/mbostock/d3), [TopoJSON](https://github.com/mbostock/topojson) (both also by Mike Bostock - man, that guy does everything!), and [Google Maps Javascript API](https://developers.google.com/maps/documentation/javascript/) but that's just for slide content.
 
 ## Is there a demo?
-Just clone this repo and run `rails s`!
+Just clone this repo and run `rails s`! The following urls should then be active:
+
+* [http://localhost:3000/presenter]() - this is the main slide deck
+* [http://localhost:3000/audience]() - this is the audience's view
+* [http://localhost:3000/electric-sheep]() - control "replicants" to test out what the deck will be like with a large audience!
